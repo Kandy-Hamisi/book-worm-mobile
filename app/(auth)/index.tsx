@@ -12,6 +12,7 @@ import styles from "@/assets/styles/login.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "@/constants/colors";
 import { Link } from "expo-router";
+import { useAuthStore } from "@/store/authStore";
 
 const Index = () => {
   const [email, setEmail] = React.useState("");
@@ -20,6 +21,10 @@ const Index = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const { user, sayHello } = useAuthStore();
+
+  console.log(user);
 
   const handleLogin = () => {};
   return (
