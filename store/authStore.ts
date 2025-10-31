@@ -11,12 +11,14 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isLoading: boolean;
+  isCheckingAuth: false;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
   isLoading: false,
+  isCheckingAuth: false,
 
   register: async ({ username, email, password }: User) => {
     set({ isLoading: true });
@@ -77,5 +79,25 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error: any) {
       set({ isLoading: false });
     }
+  },
+
+  checkAuth: async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const userJson = await AsyncStorage.getItem("user");
+      const user = userJson ? JSON.parse(userJson) : null;
+
+      set({ token, user });
+    } catch (error) {
+      console.log("Auth check failed", error);
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
+
+  logout: async () => {
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+    set({ token: null, user: null });
   },
 }));
